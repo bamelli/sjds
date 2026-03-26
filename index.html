@@ -2,153 +2,172 @@
 <html lang="ar" dir="rtl">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover"
+  />
   <title>تسجيل الدخول أو التسجيل</title>
+
   <style>
+    :root {
+      --bg: #f3f3f7;
+      --card: #ffffff;
+      --text: #111111;
+      --muted: #6f6f73;
+      --border: #d8d8dc;
+      --blue: #1563aa;
+      --btn-disabled: #a7a39d;
+      --btn-disabled-text: #54565a;
+      --btn-active: #111827;
+      --success: #22a447;
+      --success-bg: #f5fff6;
+    }
+
     * {
       box-sizing: border-box;
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+    html, body {
       margin: 0;
-      background: #f3f3f7;
-      font-family: Arial, sans-serif;
-      color: #111827;
-      display: flex;
-      justify-content: center;
       padding: 0;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, "Noto Sans Arabic", sans-serif;
     }
 
-    .page {
-      width: 100%;
-      max-width: 736px;
+    body {
       min-height: 100vh;
-      padding: 22px 28px 40px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 430px;
+      margin: 0 auto;
+      padding: 14px 16px 28px;
     }
 
     .topbar {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      margin-bottom: 34px;
+      margin-bottom: 26px;
+    }
+
+    .help-btn,
+    .close-btn,
+    .icon-btn,
+    .country-btn,
+    .country-item {
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      background: none;
+      padding: 0;
+      margin: 0;
+      font: inherit;
+      color: inherit;
     }
 
     .help-btn {
-      border: none;
-      background: none;
-      color: #1d5fa7;
-      font-size: 23px;
+      color: var(--blue);
+      font-size: 18px;
       font-weight: 500;
       cursor: pointer;
-      padding: 0;
     }
 
     .close-btn {
-      width: 44px;
-      height: 44px;
-      border: none;
-      background: transparent;
+      width: 42px;
+      height: 42px;
       border-radius: 999px;
-      font-size: 32px;
-      cursor: pointer;
+      font-size: 28px;
       line-height: 1;
-      color: #000;
+      cursor: pointer;
     }
 
-    .close-btn:hover {
-      background: rgba(0, 0, 0, 0.05);
-    }
-
-    .hero {
+    .header {
       text-align: center;
-      margin-bottom: 30px;
+      margin-bottom: 18px;
     }
 
-    .hero h1 {
-      margin: 0 0 12px;
-      font-size: 60px;
+    .header h1 {
+      margin: 0 0 10px;
+      font-size: 30px;
+      line-height: 1.28;
       font-weight: 700;
-      line-height: 1.25;
-      color: #000;
     }
 
-    .hero p {
+    .header p {
       margin: 0;
-      font-size: 24px;
+      font-size: 18px;
+      line-height: 1.5;
+      color: #2f2f31;
       font-weight: 400;
-      color: #333;
     }
 
     .card {
-      background: #fff;
-      border-radius: 28px;
-      padding: 28px;
-      border: 1px solid #ececf1;
-      margin-bottom: 26px;
-      box-shadow: 0 0 0 rgba(0,0,0,0);
+      background: var(--card);
+      border-radius: 20px;
+      padding: 18px 16px;
+      border: 1px solid #ececef;
+      margin-bottom: 16px;
     }
 
     .label {
       display: block;
-      font-size: 28px;
-      font-weight: 600;
-      margin-bottom: 18px;
+      margin-bottom: 12px;
       text-align: right;
-      color: #111;
+      font-size: 18px;
+      line-height: 1.4;
+      font-weight: 700;
     }
 
     .phone-box {
-      height: 92px;
-      border: 1px solid #d1d5db;
-      border-radius: 18px;
-      overflow: hidden;
-      background: #fff;
       display: flex;
       direction: ltr;
+      align-items: stretch;
+      height: 74px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      background: #fff;
     }
 
     .country-btn {
-      width: 208px;
-      min-width: 208px;
-      border: none;
-      border-right: 1px solid #d1d5db;
-      background: #fff;
+      width: 112px;
+      min-width: 112px;
+      border-right: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 8px;
+      padding: 0 10px;
       cursor: pointer;
-      padding: 0 14px;
+      background: #fff;
+    }
+
+    .country-flag {
+      width: 28px;
+      height: 28px;
+      object-fit: cover;
+      border-radius: 999px;
       flex-shrink: 0;
-    }
-
-    .country-btn:hover {
-      background: #fafafa;
-    }
-
-    .arrow {
-      font-size: 20px;
-      color: #111827;
-      line-height: 1;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.06);
     }
 
     .country-code {
-      font-size: 22px;
+      font-size: 18px;
+      line-height: 1;
       font-weight: 400;
-      min-width: 72px;
+      min-width: 44px;
       text-align: left;
       direction: ltr;
       unicode-bidi: bidi-override;
-      color: #111;
     }
 
-    .flag-img {
-      width: 34px;
-      height: 34px;
-      object-fit: cover;
-      border-radius: 999px;
-      box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+    .arrow {
+      font-size: 16px;
+      line-height: 1;
       flex-shrink: 0;
     }
 
@@ -157,98 +176,102 @@
       min-width: 0;
       display: flex;
       align-items: center;
-      padding: 0 22px;
-      direction: ltr;
+      padding: 0 16px;
       background: #fff;
     }
 
     .phone-input {
       width: 100%;
       min-width: 0;
-      border: none;
+      border: 0;
       outline: none;
       background: transparent;
-      color: #111827;
-      font-size: 25px;
-      font-weight: 400;
+      color: #222;
+      font-size: 20px;
       line-height: 1;
+      font-weight: 400;
       text-align: right;
       direction: ltr;
       unicode-bidi: plaintext;
+      caret-color: #111;
       font-family: Arial, sans-serif;
-      caret-color: #111827;
     }
 
     .phone-input::placeholder {
-      color: #7f7f7f;
-      font-size: 25px;
+      color: #8a8a8d;
+      font-size: 18px;
       font-weight: 400;
       direction: rtl;
       text-align: right;
     }
 
     .hint {
-      margin-top: 10px;
-      font-size: 14px;
-      color: #6b7280;
+      min-height: 18px;
+      margin-top: 8px;
+      font-size: 13px;
+      line-height: 1.4;
+      color: #d12626;
       text-align: right;
-      min-height: 20px;
-    }
-
-    .error {
-      color: #dc2626;
     }
 
     .next-btn {
       width: 100%;
-      height: 96px;
-      border: none;
-      border-radius: 18px;
-      font-size: 34px;
-      font-weight: 600;
-      background: #a8a39d;
-      color: #5f6368;
+      height: 78px;
+      border: 0;
+      border-radius: 16px;
+      background: var(--btn-disabled);
+      color: var(--btn-disabled-text);
+      font-size: 22px;
+      font-weight: 700;
       cursor: not-allowed;
-      transition: 0.2s;
-      margin-bottom: 22px;
-      display: block;
+      margin-bottom: 18px;
     }
 
     .next-btn.active {
-      background: #101828;
+      background: var(--btn-active);
       color: #fff;
       cursor: pointer;
     }
 
     .terms {
       text-align: center;
-      color: #2f2f2f;
-      line-height: 1.75;
-      font-size: 20px;
-      font-weight: 400;
-      margin: 6px 0 28px;
+      font-size: 16px;
+      line-height: 1.8;
+      color: #222;
+      margin-bottom: 18px;
     }
 
     .terms a {
-      color: #0b67b2;
+      color: var(--blue);
       text-decoration: none;
       font-weight: 500;
     }
 
-    .features .small-title {
-      color: #555;
-      font-size: 20px;
-      font-weight: 400;
-      margin: 0 0 6px;
-      text-align: right;
+    .features-card {
+      background: var(--card);
+      border-radius: 20px;
+      padding: 18px 16px 20px;
+      border: 1px solid #ececef;
     }
 
-    .features .main-title {
-      font-size: 32px;
-      font-weight: 700;
-      margin: 0 0 22px;
+    .features-top {
       text-align: right;
-      line-height: 1.25;
+      margin-bottom: 10px;
+    }
+
+    .features-top .small {
+      margin: 0 0 2px;
+      color: #555;
+      font-size: 16px;
+      line-height: 1.5;
+      font-weight: 400;
+    }
+
+    .features-top .big {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.3;
+      font-weight: 700;
       color: #000;
     }
 
@@ -257,24 +280,23 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 9px 0;
-      font-size: 19px;
+      padding: 7px 0;
+      font-size: 16px;
+      line-height: 1.7;
       font-weight: 400;
-      line-height: 1.75;
-      color: #111;
     }
 
     .check {
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
+      flex-shrink: 0;
       border-radius: 999px;
-      border: 1px solid #d8ead8;
+      border: 1px solid #d6ead8;
+      background: var(--success-bg);
+      color: var(--success);
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #16a34a;
-      background: #f8fff8;
-      flex-shrink: 0;
       font-size: 20px;
       font-weight: 700;
     }
@@ -282,12 +304,12 @@
     .modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.32);
+      background: rgba(0, 0, 0, 0.34);
       display: none;
       align-items: flex-end;
       justify-content: center;
-      padding: 16px;
-      z-index: 999;
+      z-index: 9999;
+      padding: 10px;
     }
 
     .modal-overlay.show {
@@ -297,10 +319,10 @@
     .modal {
       width: 100%;
       max-width: 430px;
-      background: #fff;
-      border-radius: 24px;
-      overflow: hidden;
       max-height: 82vh;
+      background: #fff;
+      border-radius: 22px;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }
@@ -309,69 +331,63 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 16px 18px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 14px 14px;
+      border-bottom: 1px solid #ececec;
     }
 
     .modal-title {
-      font-size: 20px;
-      font-weight: 600;
       margin: 0;
+      font-size: 18px;
+      font-weight: 700;
     }
 
     .icon-btn {
-      width: 36px;
-      height: 36px;
-      border: none;
-      background: none;
+      width: 34px;
+      height: 34px;
       border-radius: 999px;
       font-size: 24px;
       cursor: pointer;
-      line-height: 1;
-    }
-
-    .icon-btn:hover {
-      background: rgba(0,0,0,0.05);
     }
 
     .search-wrap {
-      padding: 14px 16px;
-      border-bottom: 1px solid #e5e7eb;
+      padding: 12px 14px;
+      border-bottom: 1px solid #ececec;
     }
 
     .search-input {
       width: 100%;
-      height: 46px;
-      border: 1px solid #d1d5db;
-      border-radius: 14px;
-      padding: 0 14px;
-      font-size: 16px;
+      height: 44px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0 12px;
       outline: none;
+      font-size: 15px;
       text-align: right;
       direction: rtl;
-      font-weight: 400;
+      color: #222;
     }
 
     .country-list {
       overflow-y: auto;
+      -webkit-overflow-scrolling: touch;
     }
 
     .country-item {
       width: 100%;
-      border: none;
-      background: #fff;
-      cursor: pointer;
-      padding: 14px 16px;
-      border-bottom: 1px solid #f1f5f9;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      font-size: 18px;
+      padding: 13px 14px;
+      border-bottom: 1px solid #f2f2f2;
+      cursor: pointer;
+      background: #fff;
+      text-align: right;
+      font-size: 16px;
       font-weight: 400;
     }
 
     .country-item:hover {
-      background: #f8fafc;
+      background: #fafafa;
     }
 
     .country-meta {
@@ -382,95 +398,69 @@
     }
 
     .country-dial {
-      min-width: 58px;
+      min-width: 48px;
       text-align: left;
       direction: ltr;
       unicode-bidi: bidi-override;
     }
 
-    @media (max-width: 767px) {
-      .page {
-        max-width: 430px;
-        padding: 22px 28px 36px;
+    @media (min-width: 431px) {
+      .app {
+        padding-top: 18px;
       }
 
-      .hero h1 {
-        font-size: 32px;
+      .header h1 {
+        font-size: 34px;
       }
 
-      .hero p {
-        font-size: 18px;
-      }
-
-      .card {
-        padding: 18px;
+      .header p {
+        font-size: 19px;
       }
 
       .label {
-        font-size: 24px;
+        font-size: 19px;
+      }
+
+      .phone-box {
+        height: 78px;
       }
 
       .country-btn {
-        width: 128px;
-        min-width: 128px;
-        gap: 8px;
-        padding: 0 10px;
-      }
-
-      .country-code {
-        font-size: 22px;
-        min-width: 58px;
-      }
-
-      .flag-img {
-        width: 28px;
-        height: 20px;
-        border-radius: 50px;
+        width: 126px;
+        min-width: 126px;
       }
 
       .phone-input {
-        font-size: 24px;
+        font-size: 22px;
       }
 
       .phone-input::placeholder {
-        font-size: 24px;
+        font-size: 20px;
       }
 
       .next-btn {
-        height: 86px;
-        font-size: 26px;
+        height: 82px;
+        font-size: 24px;
       }
 
-      .terms {
-        font-size: 16px;
-      }
-
-      .features .small-title {
-        font-size: 18px;
-      }
-
-      .features .main-title {
-        font-size: 30px;
+      .features-top .big {
+        font-size: 28px;
       }
 
       .feature-item {
-        font-size: 18px;
-      }
-
-      .help-btn {
         font-size: 17px;
       }
     }
   </style>
 </head>
 <body>
-  <div class="page">
+  <div class="app">
     <div class="topbar">
-      <button class="help-btn">المساعدة؟</button>
-      <button class="close-btn" type="button">✕</button>
+      <button class="help-btn" type="button">المساعدة؟</button>
+      <button class="close-btn" type="button" aria-label="إغلاق">✕</button>
     </div>
 
-    <div class="hero">
+    <div class="header">
       <h1>تسجيل الدخول أو التسجيل</h1>
       <p>الرجاء تعبئة رقم الموبايل</p>
     </div>
@@ -479,10 +469,10 @@
       <label class="label">رقم الموبايل</label>
 
       <div class="phone-box">
-        <button id="countryButton" class="country-btn" type="button">
+        <button id="countryButton" class="country-btn" type="button" aria-label="اختيار الدولة">
           <img
             id="countryFlag"
-            class="flag-img"
+            class="country-flag"
             src="https://flagcdn.com/w40/iq.png"
             alt="العراق"
           />
@@ -506,18 +496,20 @@
       <div id="phoneHint" class="hint"></div>
     </div>
 
-    <button id="nextButton" class="next-btn" disabled>التالي</button>
+    <button id="nextButton" class="next-btn" type="button" disabled>التالي</button>
 
     <div class="terms">
-      باستخدامك السوق المفتوح أنت توافق على <br />
+      باستخدامك السوق المفتوح أنت توافق على<br />
       <a href="#">شروط الاستخدام</a>
       <span> و </span>
       <a href="#">سياسة الخصوصية</a>
     </div>
 
-    <div class="card features">
-      <p class="small-title">أفضل طريقة</p>
-      <h2 class="main-title">لبيع أو شراء أي شيء</h2>
+    <div class="features-card">
+      <div class="features-top">
+        <p class="small">أفضل طريقة</p>
+        <h2 class="big">لبيع أو شراء أي شيء</h2>
+      </div>
 
       <div class="feature-item">
         <span>انضم إلى ملايين الأشخاص على السوق المفتوح</span>
@@ -549,7 +541,7 @@
   <div id="modalOverlay" class="modal-overlay">
     <div class="modal">
       <div class="modal-header">
-        <button id="closeModalBtn" class="icon-btn" type="button">✕</button>
+        <button id="closeModalBtn" class="icon-btn" type="button" aria-label="إغلاق">✕</button>
         <h3 class="modal-title">اختر الدولة</h3>
       </div>
 
@@ -612,7 +604,6 @@
 
       const current = phoneInput.value.replace(/\D/g, "");
       phoneInput.value = current.slice(0, country.max);
-
       validatePhone();
     }
 
@@ -627,7 +618,7 @@
           <span>${country.nameAr}</span>
           <span class="country-meta">
             <span class="country-dial">${country.dialCode}</span>
-            <img class="flag-img" src="${country.flag}" alt="${country.nameAr}">
+            <img class="country-flag" src="${country.flag}" alt="${country.nameAr}">
           </span>
         `;
 
@@ -652,11 +643,10 @@
 
       phoneInput.value = cleaned;
 
-      if (cleaned.length === 0) {
+      if (!cleaned.length) {
         nextButton.disabled = true;
         nextButton.classList.remove("active");
         phoneHint.textContent = "";
-        phoneHint.classList.remove("error");
         return;
       }
 
@@ -664,27 +654,23 @@
         nextButton.disabled = true;
         nextButton.classList.remove("active");
         phoneHint.textContent = `الحد الأدنى ${selectedCountry.min} أرقام`;
-        phoneHint.classList.add("error");
         return;
       }
 
       nextButton.disabled = false;
       nextButton.classList.add("active");
       phoneHint.textContent = "";
-      phoneHint.classList.remove("error");
     }
 
     phoneInput.addEventListener("input", validatePhone);
 
     phoneInput.addEventListener("keydown", (e) => {
-      const allowedKeys = [
+      const allowed = [
         "Backspace", "Delete", "ArrowLeft", "ArrowRight",
         "ArrowUp", "ArrowDown", "Tab", "Home", "End"
       ];
 
-      if (allowedKeys.includes(e.key) || (e.ctrlKey || e.metaKey)) {
-        return;
-      }
+      if (allowed.includes(e.key) || e.ctrlKey || e.metaKey) return;
 
       if (!/^\d$/.test(e.key)) {
         e.preventDefault();
@@ -703,15 +689,7 @@
       e.preventDefault();
       const pasted = (e.clipboardData || window.clipboardData).getData("text");
       const digits = pasted.replace(/\D/g, "");
-      const current = phoneInput.value.replace(/\D/g, "");
-      const start = phoneInput.selectionStart ?? current.length;
-      const end = phoneInput.selectionEnd ?? current.length;
-
-      const before = current.slice(0, start);
-      const after = current.slice(end);
-      const merged = (before + digits + after).slice(0, selectedCountry.max);
-
-      phoneInput.value = merged;
+      phoneInput.value = digits.slice(0, selectedCountry.max);
       validatePhone();
     });
 
@@ -732,15 +710,11 @@
 
     searchInput.addEventListener("input", () => {
       const value = searchInput.value.trim().toLowerCase();
-
-      const filtered = countries.filter((country) => {
-        return (
-          country.nameAr.includes(searchInput.value) ||
-          country.dialCode.includes(value) ||
-          country.iso2.toLowerCase().includes(value)
-        );
-      });
-
+      const filtered = countries.filter((country) =>
+        country.nameAr.includes(searchInput.value) ||
+        country.dialCode.includes(value) ||
+        country.iso2.toLowerCase().includes(value)
+      );
       renderCountries(filtered);
     });
 
