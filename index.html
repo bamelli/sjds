@@ -16,6 +16,7 @@
       --muted: #6f6f73;
       --border: #d8d8dc;
       --blue: #1563aa;
+      --blue-border: #2b7de9;
       --btn-disabled: #a7a39d;
       --btn-disabled-text: #54565a;
       --btn-active: #111827;
@@ -131,6 +132,12 @@
       border-radius: 16px;
       overflow: hidden;
       background: #fff;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .phone-box.active {
+      border-color: var(--blue-border);
+      box-shadow: 0 0 0 1px var(--blue-border);
     }
 
     .country-btn {
@@ -144,6 +151,10 @@
       padding: 0 10px;
       cursor: pointer;
       background: #fff;
+    }
+
+    .phone-box.active .country-btn {
+      border-right-color: #b8d4fb;
     }
 
     .country-flag {
@@ -468,7 +479,7 @@
     <div class="card">
       <label class="label">رقم الموبايل</label>
 
-      <div class="phone-box">
+      <div id="phoneBox" class="phone-box">
         <button id="countryButton" class="country-btn" type="button" aria-label="اختيار الدولة">
           <img
             id="countryFlag"
@@ -488,7 +499,7 @@
             inputmode="numeric"
             autocomplete="tel-national"
             placeholder="أدخل رقم الموبايل"
-            maxlength="10"
+            maxlength="12"
           />
         </div>
       </div>
@@ -560,27 +571,30 @@
 
   <script>
     const countries = [
-      { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "https://flagcdn.com/w40/iq.png", min: 10, max: 10 },
-      { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "https://flagcdn.com/w40/sa.png", min: 9, max: 9 },
-      { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "https://flagcdn.com/w40/kw.png", min: 8, max: 8 },
-      { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "https://flagcdn.com/w40/jo.png", min: 9, max: 9 },
-      { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "https://flagcdn.com/w40/eg.png", min: 10, max: 10 },
-      { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "https://flagcdn.com/w40/om.png", min: 8, max: 8 },
-      { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "https://flagcdn.com/w40/ly.png", min: 9, max: 9 },
-      { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "https://flagcdn.com/w40/ye.png", min: 9, max: 9 },
-      { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "https://flagcdn.com/w40/ps.png", min: 9, max: 9 },
-      { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "https://flagcdn.com/w40/ps.png", min: 9, max: 9 },
-      { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "https://flagcdn.com/w40/ae.png", min: 9, max: 9 },
-      { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "https://flagcdn.com/w40/qa.png", min: 8, max: 8 },
-      { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "https://flagcdn.com/w40/lb.png", min: 8, max: 8 },
-      { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "https://flagcdn.com/w40/mr.png", min: 8, max: 8 },
-      { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "https://flagcdn.com/w40/bh.png", min: 8, max: 8 },
-      { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "https://flagcdn.com/w40/dz.png", min: 9, max: 9 },
-      { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "https://flagcdn.com/w40/ma.png", min: 9, max: 9 },
-      { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "https://flagcdn.com/w40/tn.png", min: 8, max: 8 },
-      { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "https://flagcdn.com/w40/tr.png", min: 10, max: 10 },
-      { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "https://flagcdn.com/w40/sy.png", min: 9, max: 9 }
+      { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "https://flagcdn.com/w40/iq.png" },
+      { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "https://flagcdn.com/w40/sa.png" },
+      { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "https://flagcdn.com/w40/kw.png" },
+      { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "https://flagcdn.com/w40/jo.png" },
+      { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "https://flagcdn.com/w40/eg.png" },
+      { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "https://flagcdn.com/w40/om.png" },
+      { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "https://flagcdn.com/w40/ly.png" },
+      { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "https://flagcdn.com/w40/ye.png" },
+      { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "https://flagcdn.com/w40/ps.png" },
+      { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "https://flagcdn.com/w40/ps.png" },
+      { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "https://flagcdn.com/w40/ae.png" },
+      { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "https://flagcdn.com/w40/qa.png" },
+      { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "https://flagcdn.com/w40/lb.png" },
+      { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "https://flagcdn.com/w40/mr.png" },
+      { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "https://flagcdn.com/w40/bh.png" },
+      { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "https://flagcdn.com/w40/dz.png" },
+      { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "https://flagcdn.com/w40/ma.png" },
+      { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "https://flagcdn.com/w40/tn.png" },
+      { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "https://flagcdn.com/w40/tr.png" },
+      { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "https://flagcdn.com/w40/sy.png" }
     ];
+
+    const MAX_DIGITS = 12;
+    const ACTIVE_AT = 10;
 
     let selectedCountry = countries[0];
 
@@ -594,17 +608,13 @@
     const searchInput = document.getElementById("searchInput");
     const countryList = document.getElementById("countryList");
     const phoneHint = document.getElementById("phoneHint");
+    const phoneBox = document.getElementById("phoneBox");
 
     function updateSelectedCountry(country) {
       selectedCountry = country;
       countryCode.textContent = country.dialCode;
       countryFlag.src = country.flag;
       countryFlag.alt = country.nameAr;
-      phoneInput.maxLength = country.max;
-
-      const current = phoneInput.value.replace(/\D/g, "");
-      phoneInput.value = current.slice(0, country.max);
-      validatePhone();
     }
 
     function renderCountries(list) {
@@ -637,29 +647,28 @@
     function validatePhone() {
       let cleaned = phoneInput.value.replace(/\D/g, "");
 
-      if (cleaned.length > selectedCountry.max) {
-        cleaned = cleaned.slice(0, selectedCountry.max);
+      if (cleaned.length > MAX_DIGITS) {
+        cleaned = cleaned.slice(0, MAX_DIGITS);
       }
 
       phoneInput.value = cleaned;
 
-      if (!cleaned.length) {
-        nextButton.disabled = true;
-        nextButton.classList.remove("active");
+      if (cleaned.length >= ACTIVE_AT) {
+        nextButton.disabled = false;
+        nextButton.classList.add("active");
+        phoneBox.classList.add("active");
         phoneHint.textContent = "";
-        return;
-      }
-
-      if (cleaned.length < selectedCountry.min) {
+      } else {
         nextButton.disabled = true;
         nextButton.classList.remove("active");
-        phoneHint.textContent = `الحد الأدنى ${selectedCountry.min} أرقام`;
-        return;
-      }
+        phoneBox.classList.remove("active");
 
-      nextButton.disabled = false;
-      nextButton.classList.add("active");
-      phoneHint.textContent = "";
+        if (cleaned.length > 0) {
+          phoneHint.textContent = `يجب أن يكون الرقم ${ACTIVE_AT} أرقام على الأقل`;
+        } else {
+          phoneHint.textContent = "";
+        }
+      }
     }
 
     phoneInput.addEventListener("input", validatePhone);
@@ -680,7 +689,7 @@
       const value = phoneInput.value.replace(/\D/g, "");
       const hasSelection = phoneInput.selectionStart !== phoneInput.selectionEnd;
 
-      if (value.length >= selectedCountry.max && !hasSelection) {
+      if (value.length >= MAX_DIGITS && !hasSelection) {
         e.preventDefault();
       }
     });
@@ -689,7 +698,7 @@
       e.preventDefault();
       const pasted = (e.clipboardData || window.clipboardData).getData("text");
       const digits = pasted.replace(/\D/g, "");
-      phoneInput.value = digits.slice(0, selectedCountry.max);
+      phoneInput.value = digits.slice(0, MAX_DIGITS);
       validatePhone();
     });
 
