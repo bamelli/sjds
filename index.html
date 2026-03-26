@@ -1,150 +1,246 @@
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>تسجيل الدخول</title>
+import React, { useEffect, useMemo, useState } from "react";
+import { ChevronDown, X } from "lucide-react";
 
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f2f2f2;
-    margin: 0;
-}
+const countries = [
+  { name: "Turkey", nameFa: "ترکیه", iso2: "TR", dialCode: "+90", flag: "🇹🇷" },
+  { name: "Iran", nameFa: "ایران", iso2: "IR", dialCode: "+98", flag: "🇮🇷" },
+  { name: "Saudi Arabia", nameFa: "عربستان سعودی", iso2: "SA", dialCode: "+966", flag: "🇸🇦" },
+  { name: "United Arab Emirates", nameFa: "امارات", iso2: "AE", dialCode: "+971", flag: "🇦🇪" },
+  { name: "Iraq", nameFa: "عراق", iso2: "IQ", dialCode: "+964", flag: "🇮🇶" },
+  { name: "Kuwait", nameFa: "کویت", iso2: "KW", dialCode: "+965", flag: "🇰🇼" },
+  { name: "Qatar", nameFa: "قطر", iso2: "QA", dialCode: "+974", flag: "🇶🇦" },
+  { name: "Bahrain", nameFa: "بحرین", iso2: "BH", dialCode: "+973", flag: "🇧🇭" },
+  { name: "Oman", nameFa: "عمان", iso2: "OM", dialCode: "+968", flag: "🇴🇲" },
+  { name: "Jordan", nameFa: "اردن", iso2: "JO", dialCode: "+962", flag: "🇯🇴" },
+  { name: "Egypt", nameFa: "مصر", iso2: "EG", dialCode: "+20", flag: "🇪🇬" },
+  { name: "Germany", nameFa: "آلمان", iso2: "DE", dialCode: "+49", flag: "🇩🇪" },
+  { name: "France", nameFa: "فرانسه", iso2: "FR", dialCode: "+33", flag: "🇫🇷" },
+  { name: "United Kingdom", nameFa: "بریتانیا", iso2: "GB", dialCode: "+44", flag: "🇬🇧" },
+  { name: "United States", nameFa: "آمریکا", iso2: "US", dialCode: "+1", flag: "🇺🇸" },
+  { name: "Canada", nameFa: "کانادا", iso2: "CA", dialCode: "+1", flag: "🇨🇦" },
+  { name: "Australia", nameFa: "استرالیا", iso2: "AU", dialCode: "+61", flag: "🇦🇺" },
+  { name: "India", nameFa: "هند", iso2: "IN", dialCode: "+91", flag: "🇮🇳" },
+  { name: "Pakistan", nameFa: "پاکستان", iso2: "PK", dialCode: "+92", flag: "🇵🇰" },
+  { name: "Afghanistan", nameFa: "افغانستان", iso2: "AF", dialCode: "+93", flag: "🇦🇫" },
+];
 
-.container {
-    max-width: 400px;
-    margin: 50px auto;
-    background: #fff;
-    padding: 20px;
-    border-radius: 12px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
-}
+const fallbackCountry = countries.find((c) => c.iso2 === "TR")!;
 
-.title {
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+export default function PhoneLoginPage() {
+  const [selectedCountry, setSelectedCountry] = useState(fallbackCountry);
+  const [phone, setPhone] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
+  const [search, setSearch] = useState("");
 
-.subtitle {
-    text-align: center;
-    color: #777;
-    font-size: 14px;
-    margin-bottom: 20px;
-}
+  useEffect(() => {
+    const detectCountry = async () => {
+      try {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-.input-group {
-    display: flex;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    overflow: hidden;
-    margin-bottom: 20px;
-}
+        const timezoneMap: Record<string, string> = {
+          "Europe/Istanbul": "TR",
+          "Asia/Tehran": "IR",
+          "Asia/Riyadh": "SA",
+          "Asia/Dubai": "AE",
+          "Asia/Baghdad": "IQ",
+          "Asia/Kuwait": "KW",
+          "Asia/Qatar": "QA",
+          "Asia/Bahrain": "BH",
+          "Asia/Muscat": "OM",
+          "Asia/Amman": "JO",
+          "Africa/Cairo": "EG",
+          "Europe/Berlin": "DE",
+          "Europe/Paris": "FR",
+          "Europe/London": "GB",
+          "America/New_York": "US",
+          "America/Chicago": "US",
+          "America/Denver": "US",
+          "America/Los_Angeles": "US",
+          "America/Toronto": "CA",
+          "Australia/Sydney": "AU",
+          "Asia/Kolkata": "IN",
+          "Asia/Karachi": "PK",
+          "Asia/Kabul": "AF",
+        };
 
-.country {
-    background: #f5f5f5;
-    padding: 10px;
-    border-left: 1px solid #ddd;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
+        const fromTimezone = countries.find(
+          (c) => c.iso2 === timezoneMap[timezone]
+        );
+        if (fromTimezone) {
+          setSelectedCountry(fromTimezone);
+          return;
+        }
 
-input {
-    border: none;
-    flex: 1;
-    padding: 10px;
-    outline: none;
-    font-size: 14px;
-    text-align: right;
-}
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            async (position) => {
+              try {
+                const { latitude, longitude } = position.coords;
+                const response = await fetch(
+                  `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
+                );
+                const data = await response.json();
+                const iso2 = data?.address?.country_code?.toUpperCase();
+                const found = countries.find((c) => c.iso2 === iso2);
+                if (found) setSelectedCountry(found);
+              } catch (error) {
+                console.error("Reverse geocoding failed", error);
+              }
+            },
+            () => {
+              // ignore
+            }
+          );
+        }
+      } catch (error) {
+        console.error("Country detection failed", error);
+      }
+    };
 
-button {
-    width: 100%;
-    padding: 12px;
-    background: #bdbdbd;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    font-size: 16px;
-    cursor: pointer;
-}
+    detectCountry();
+  }, []);
 
-button:hover {
-    background: #9e9e9e;
-}
+  const filteredCountries = useMemo(() => {
+    const q = search.trim().toLowerCase();
+    if (!q) return countries;
+    return countries.filter(
+      (country) =>
+        country.name.toLowerCase().includes(q) ||
+        country.nameFa.includes(search) ||
+        country.dialCode.includes(q) ||
+        country.iso2.toLowerCase().includes(q)
+    );
+  }, [search]);
 
-.terms {
-    text-align: center;
-    font-size: 12px;
-    color: #666;
-    margin-top: 10px;
-}
+  const isValid = phone.trim().length >= 7;
 
-.terms a {
-    color: #1976d2;
-    text-decoration: none;
-}
+  return (
+    <div className="min-h-screen bg-[#f3f3f7] flex items-center justify-center p-4" dir="rtl">
+      <div className="w-full max-w-md bg-transparent">
+        <div className="mb-4 flex items-center justify-between">
+          <button className="text-slate-500 hover:text-slate-700 transition">کمک؟</button>
+          <button className="rounded-full p-2 hover:bg-black/5 transition" aria-label="بستن">
+            <X className="h-7 w-7" />
+          </button>
+        </div>
 
-.box {
-    margin-top: 25px;
-    background: #fafafa;
-    padding: 15px;
-    border-radius: 10px;
-}
+        <div className="text-center mb-6">
+          <h1 className="text-4xl font-bold tracking-tight mb-3">تسجيل الدخول أو التسجيل</h1>
+          <p className="text-xl text-slate-600">الرجاء تعبئة رقم الموبايل</p>
+        </div>
 
-.box-title {
-    font-weight: bold;
-    margin-bottom: 10px;
-}
+        <div className="bg-white rounded-[28px] shadow-sm p-5 border border-slate-100 mb-5">
+          <label className="block text-2xl font-semibold text-right mb-4">رقم الموبايل</label>
 
-.box ul {
-    padding: 0;
-    list-style: none;
-}
+          <div className="flex rounded-2xl border border-slate-300 overflow-hidden bg-white h-24">
+            <input
+              value={phone}
+              onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, ""))}
+              placeholder="أدخل رقم الموبايل"
+              className="flex-1 px-6 text-2xl outline-none text-right placeholder:text-slate-400"
+              inputMode="tel"
+            />
 
-.box li {
-    margin-bottom: 8px;
-    color: #444;
-}
-</style>
+            <button
+              type="button"
+              onClick={() => setIsOpen(true)}
+              className="w-52 border-r border-slate-300 flex items-center justify-center gap-3 text-2xl hover:bg-slate-50 transition"
+            >
+              <ChevronDown className="h-6 w-6" />
+              <span>{selectedCountry.dialCode}</span>
+              <span className="text-4xl leading-none">{selectedCountry.flag}</span>
+            </button>
+          </div>
+        </div>
 
-</head>
+        <button
+          disabled={!isValid}
+          className={`w-full h-24 rounded-2xl text-3xl font-bold transition ${
+            isValid
+              ? "bg-slate-900 text-white hover:opacity-95"
+              : "bg-[#a6a39d] text-slate-700 cursor-not-allowed"
+          }`}
+        >
+          التالي
+        </button>
 
-<body>
+        <p className="text-center text-slate-700 text-lg leading-8 mt-6">
+          باستخدامك السوق المفتوح أنت توافق على <br />
+          <a href="#" className="text-sky-700 font-semibold">شروط الاستخدام</a>
+          <span> و </span>
+          <a href="#" className="text-sky-700 font-semibold">سياسة الخصوصية</a>
+        </p>
 
-<div class="container">
+        <div className="mt-8 bg-white rounded-[28px] shadow-sm p-6 border border-slate-100">
+          <p className="text-xl text-right text-slate-700">أفضل طريقة</p>
+          <h2 className="text-4xl font-bold text-right mt-1 mb-6">لبيع أو شراء أي شيء</h2>
 
-    <div class="title">تسجيل الدخول أو التسجيل</div>
-    <div class="subtitle">الرجاء تعبئة رقم الموبايل</div>
+          <ul className="space-y-4 text-right">
+            {[
+              "انضم إلى ملايين الأشخاص على السوق المفتوح",
+              "تسجيل الدخول يعزز الثقة والأمان",
+              "أجب على الرسائل و العروض",
+              "إدارة الإعلانات المفضلة والمحفوظة",
+              "أضف أي شيء للبيع أو للإيجار او وظيفة",
+            ].map((item) => (
+              <li key={item} className="flex items-center justify-between gap-3 text-2xl">
+                <span>{item}</span>
+                <span className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-green-600 bg-green-50">
+                  ✓
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
 
-    <div class="input-group">
-        <div class="country">🇹🇷 +90 ⌄</div>
-        <input type="text" placeholder="أدخل رقم الموبايل">
+        {isOpen && (
+          <div className="fixed inset-0 bg-black/30 z-50 flex items-end sm:items-center justify-center p-4">
+            <div className="w-full max-w-md bg-white rounded-[28px] shadow-2xl overflow-hidden">
+              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="rounded-full p-2 hover:bg-black/5"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+                <h3 className="text-xl font-bold">انتخاب کشور</h3>
+              </div>
+
+              <div className="p-4 border-b border-slate-200">
+                <input
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="جستجوی کشور یا کد"
+                  className="w-full h-12 rounded-xl border border-slate-300 px-4 outline-none"
+                />
+              </div>
+
+              <div className="max-h-96 overflow-y-auto">
+                {filteredCountries.map((country) => (
+                  <button
+                    key={country.iso2}
+                    onClick={() => {
+                      setSelectedCountry(country);
+                      setIsOpen(false);
+                      setSearch("");
+                    }}
+                    className="w-full px-4 py-3 border-b border-slate-100 flex items-center justify-between hover:bg-slate-50"
+                  >
+                    <div className="text-right">
+                      <div className="font-semibold">{country.nameFa}</div>
+                      <div className="text-sm text-slate-500">{country.name}</div>
+                    </div>
+                    <div className="flex items-center gap-3 text-lg">
+                      <span>{country.dialCode}</span>
+                      <span className="text-2xl">{country.flag}</span>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
-
-    <button>التالي</button>
-
-    <div class="terms">
-        باستخدامك السوق المفتوح أنت توافق على 
-        <a href="#">شروط الاستخدام</a> و 
-        <a href="#">سياسة الخصوصية</a>
-    </div>
-
-    <div class="box">
-        <div class="box-title">أفضل طريقة لبيع أو شراء أي شيء</div>
-        <ul>
-            <li>✔️ انضم إلى ملايين الأشخاص على السوق المفتوح</li>
-            <li>✔️ تسجيل الدخول يعزز الثقة والأمان</li>
-            <li>✔️ أجب على الرسائل والعروض</li>
-            <li>✔️ إدارة الإعلانات المفضلة والمحفوظة</li>
-            <li>✔️ أضف أي شيء للبيع أو للإيجار أو وظيفة</li>
-        </ul>
-    </div>
-
-</div>
-
-</body>
-</html>
+  );
+}
