@@ -7,16 +7,17 @@
   <style>
     * {
       box-sizing: border-box;
-      font-family: Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
     }
 
     body {
       margin: 0;
       background: #f3f3f7;
+      font-family: Arial, sans-serif;
+      color: #111827;
       display: flex;
       justify-content: center;
       padding: 16px;
-      color: #111;
     }
 
     .page {
@@ -90,38 +91,20 @@
     }
 
     .phone-box {
-      display: flex;
-      flex-direction: row-reverse;
-      align-items: stretch;
       height: 88px;
       border: 1px solid #d1d5db;
       border-radius: 20px;
       overflow: hidden;
       background: #fff;
-    }
-
-    .phone-input {
-      flex: 1;
-      border: none;
-      outline: none;
-      font-size: 28px;
-      padding: 0 22px;
+      display: flex;
       direction: ltr;
-      text-align: left;
-      color: #111827;
-      background: transparent;
-    }
-
-    .phone-input::placeholder {
-      color: #9ca3af;
-      direction: rtl;
-      text-align: right;
     }
 
     .country-btn {
       width: 170px;
+      min-width: 170px;
       border: none;
-      border-left: 1px solid #d1d5db;
+      border-right: 1px solid #d1d5db;
       background: #fff;
       display: flex;
       align-items: center;
@@ -136,18 +119,18 @@
       background: #f8fafc;
     }
 
-    .country-code {
-      font-size: 28px;
-      direction: ltr;
-      unicode-bidi: embed;
-      min-width: 64px;
-      text-align: left;
-      color: #111827;
-    }
-
     .arrow {
       font-size: 18px;
       color: #111827;
+      line-height: 1;
+    }
+
+    .country-code {
+      font-size: 28px;
+      min-width: 68px;
+      text-align: left;
+      direction: ltr;
+      unicode-bidi: bidi-override;
     }
 
     .flag-img {
@@ -155,9 +138,54 @@
       height: 20px;
       object-fit: cover;
       border-radius: 3px;
-      display: inline-block;
       box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
       flex-shrink: 0;
+    }
+
+    .phone-input-wrap {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      padding: 0 20px;
+      direction: ltr;
+      background: #fff;
+    }
+
+    .phone-input {
+      width: 100%;
+      min-width: 0;
+      border: none;
+      outline: none;
+      background: transparent;
+      color: #111827;
+      font-size: 30px;
+      line-height: 1;
+      text-align: left;
+      direction: ltr;
+      unicode-bidi: plaintext;
+      font-family: Arial, sans-serif;
+      letter-spacing: 0.5px;
+      caret-color: #111827;
+    }
+
+    .phone-input::placeholder {
+      color: #9ca3af;
+      font-size: 22px;
+      direction: rtl;
+      text-align: right;
+    }
+
+    .hint {
+      margin-top: 10px;
+      font-size: 15px;
+      color: #6b7280;
+      text-align: right;
+      min-height: 22px;
+    }
+
+    .error {
+      color: #dc2626;
     }
 
     .next-btn {
@@ -338,7 +366,7 @@
       min-width: 62px;
       text-align: left;
       direction: ltr;
-      unicode-bidi: embed;
+      unicode-bidi: bidi-override;
     }
 
     @media (min-width: 640px) {
@@ -364,15 +392,6 @@
       <label class="label">رقم الموبايل</label>
 
       <div class="phone-box">
-        <input
-          id="phoneInput"
-          class="phone-input"
-          type="tel"
-          inputmode="numeric"
-          autocomplete="tel"
-          placeholder="أدخل رقم الموبايل"
-        />
-
         <button id="countryButton" class="country-btn" type="button">
           <span class="arrow">▾</span>
           <span id="countryCode" class="country-code">+964</span>
@@ -383,7 +402,21 @@
             alt="العراق"
           />
         </button>
+
+        <div class="phone-input-wrap">
+          <input
+            id="phoneInput"
+            class="phone-input"
+            type="tel"
+            inputmode="numeric"
+            autocomplete="tel-national"
+            placeholder="أدخل رقم الموبايل"
+            maxlength="10"
+          />
+        </div>
       </div>
+
+      <div id="phoneHint" class="hint">أدخل رقم موبايل صحيح</div>
     </div>
 
     <button id="nextButton" class="next-btn" disabled>التالي</button>
@@ -448,26 +481,26 @@
 
   <script>
     const countries = [
-      { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "https://flagcdn.com/w40/iq.png" },
-      { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "https://flagcdn.com/w40/sa.png" },
-      { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "https://flagcdn.com/w40/kw.png" },
-      { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "https://flagcdn.com/w40/jo.png" },
-      { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "https://flagcdn.com/w40/eg.png" },
-      { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "https://flagcdn.com/w40/om.png" },
-      { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "https://flagcdn.com/w40/ly.png" },
-      { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "https://flagcdn.com/w40/ye.png" },
-      { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "https://flagcdn.com/w40/ps.png" },
-      { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "https://flagcdn.com/w40/ps.png" },
-      { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "https://flagcdn.com/w40/ae.png" },
-      { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "https://flagcdn.com/w40/qa.png" },
-      { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "https://flagcdn.com/w40/lb.png" },
-      { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "https://flagcdn.com/w40/mr.png" },
-      { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "https://flagcdn.com/w40/bh.png" },
-      { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "https://flagcdn.com/w40/dz.png" },
-      { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "https://flagcdn.com/w40/ma.png" },
-      { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "https://flagcdn.com/w40/tn.png" },
-      { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "https://flagcdn.com/w40/tr.png" },
-      { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "https://flagcdn.com/w40/sy.png" }
+      { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "https://flagcdn.com/w40/iq.png", min: 10, max: 10 },
+      { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "https://flagcdn.com/w40/sa.png", min: 9, max: 9 },
+      { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "https://flagcdn.com/w40/kw.png", min: 8, max: 8 },
+      { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "https://flagcdn.com/w40/jo.png", min: 9, max: 9 },
+      { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "https://flagcdn.com/w40/eg.png", min: 10, max: 10 },
+      { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "https://flagcdn.com/w40/om.png", min: 8, max: 8 },
+      { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "https://flagcdn.com/w40/ly.png", min: 9, max: 9 },
+      { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "https://flagcdn.com/w40/ye.png", min: 9, max: 9 },
+      { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "https://flagcdn.com/w40/ps.png", min: 9, max: 9 },
+      { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "https://flagcdn.com/w40/ps.png", min: 9, max: 9 },
+      { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "https://flagcdn.com/w40/ae.png", min: 9, max: 9 },
+      { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "https://flagcdn.com/w40/qa.png", min: 8, max: 8 },
+      { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "https://flagcdn.com/w40/lb.png", min: 8, max: 8 },
+      { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "https://flagcdn.com/w40/mr.png", min: 8, max: 8 },
+      { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "https://flagcdn.com/w40/bh.png", min: 8, max: 8 },
+      { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "https://flagcdn.com/w40/dz.png", min: 9, max: 9 },
+      { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "https://flagcdn.com/w40/ma.png", min: 9, max: 9 },
+      { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "https://flagcdn.com/w40/tn.png", min: 8, max: 8 },
+      { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "https://flagcdn.com/w40/tr.png", min: 10, max: 10 },
+      { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "https://flagcdn.com/w40/sy.png", min: 9, max: 9 }
     ];
 
     let selectedCountry = countries[0];
@@ -481,12 +514,19 @@
     const closeModalBtn = document.getElementById("closeModalBtn");
     const searchInput = document.getElementById("searchInput");
     const countryList = document.getElementById("countryList");
+    const phoneHint = document.getElementById("phoneHint");
 
     function updateSelectedCountry(country) {
       selectedCountry = country;
       countryCode.textContent = country.dialCode;
       countryFlag.src = country.flag;
       countryFlag.alt = country.nameAr;
+      phoneInput.maxLength = country.max;
+
+      const current = phoneInput.value.replace(/\D/g, "");
+      phoneInput.value = current.slice(0, country.max);
+
+      validatePhone();
     }
 
     function renderCountries(list) {
@@ -509,6 +549,7 @@
           modalOverlay.classList.remove("show");
           searchInput.value = "";
           renderCountries(countries);
+          phoneInput.focus();
         });
 
         countryList.appendChild(button);
@@ -516,19 +557,84 @@
     }
 
     function validatePhone() {
-      const cleaned = phoneInput.value.replace(/\D/g, "");
+      let cleaned = phoneInput.value.replace(/\D/g, "");
+
+      if (cleaned.length > selectedCountry.max) {
+        cleaned = cleaned.slice(0, selectedCountry.max);
+      }
+
       phoneInput.value = cleaned;
 
-      if (cleaned.length >= 7) {
-        nextButton.disabled = false;
-        nextButton.classList.add("active");
-      } else {
+      if (cleaned.length === 0) {
         nextButton.disabled = true;
         nextButton.classList.remove("active");
+        phoneHint.textContent = "أدخل رقم موبايل صحيح";
+        phoneHint.classList.remove("error");
+        return;
       }
+
+      if (cleaned.length < selectedCountry.min) {
+        nextButton.disabled = true;
+        nextButton.classList.remove("active");
+        phoneHint.textContent = `الحد الأدنى ${selectedCountry.min} أرقام`;
+        phoneHint.classList.add("error");
+        return;
+      }
+
+      if (cleaned.length > selectedCountry.max) {
+        nextButton.disabled = true;
+        nextButton.classList.remove("active");
+        phoneHint.textContent = `الحد الأقصى ${selectedCountry.max} أرقام`;
+        phoneHint.classList.add("error");
+        return;
+      }
+
+      nextButton.disabled = false;
+      nextButton.classList.add("active");
+      phoneHint.textContent = "رقم الموبايل صحيح";
+      phoneHint.classList.remove("error");
     }
 
     phoneInput.addEventListener("input", validatePhone);
+
+    phoneInput.addEventListener("keydown", (e) => {
+      const allowedKeys = [
+        "Backspace", "Delete", "ArrowLeft", "ArrowRight",
+        "ArrowUp", "ArrowDown", "Tab", "Home", "End"
+      ];
+
+      if (allowedKeys.includes(e.key) || (e.ctrlKey || e.metaKey)) {
+        return;
+      }
+
+      if (!/^\d$/.test(e.key)) {
+        e.preventDefault();
+        return;
+      }
+
+      const value = phoneInput.value.replace(/\D/g, "");
+      const hasSelection = phoneInput.selectionStart !== phoneInput.selectionEnd;
+
+      if (value.length >= selectedCountry.max && !hasSelection) {
+        e.preventDefault();
+      }
+    });
+
+    phoneInput.addEventListener("paste", (e) => {
+      e.preventDefault();
+      const pasted = (e.clipboardData || window.clipboardData).getData("text");
+      const digits = pasted.replace(/\D/g, "");
+      const current = phoneInput.value.replace(/\D/g, "");
+      const start = phoneInput.selectionStart ?? current.length;
+      const end = phoneInput.selectionEnd ?? current.length;
+
+      const before = current.slice(0, start);
+      const after = current.slice(end);
+      const merged = (before + digits + after).slice(0, selectedCountry.max);
+
+      phoneInput.value = merged;
+      validatePhone();
+    });
 
     countryButton.addEventListener("click", () => {
       modalOverlay.classList.add("show");
@@ -561,6 +667,7 @@
 
     updateSelectedCountry(countries[0]);
     renderCountries(countries);
+    validatePhone();
   </script>
 </body>
 </html>
