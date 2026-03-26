@@ -3,222 +3,559 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>تسجيل الدخول</title>
-
+  <title>تسجيل الدخول أو التسجيل</title>
   <style>
-    * { box-sizing: border-box; font-family: Arial; }
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
     body {
       margin: 0;
       background: #f3f3f7;
       display: flex;
       justify-content: center;
       padding: 16px;
+      color: #111;
     }
 
-    .page { width: 100%; max-width: 420px; }
+    .page {
+      width: 100%;
+      max-width: 430px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 22px;
+    }
+
+    .help-btn {
+      border: none;
+      background: none;
+      color: #6b7280;
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .close-btn {
+      width: 40px;
+      height: 40px;
+      border: none;
+      background: transparent;
+      border-radius: 999px;
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .close-btn:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .hero {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 34px;
+      font-weight: 700;
+      line-height: 1.25;
+    }
+
+    .hero p {
+      margin: 0;
+      font-size: 22px;
+      color: #6b7280;
+    }
 
     .card {
       background: #fff;
-      border-radius: 24px;
-      padding: 18px;
+      border-radius: 28px;
+      padding: 20px;
+      border: 1px solid #ececf1;
       margin-bottom: 16px;
+    }
+
+    .label {
+      display: block;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 14px;
+      text-align: right;
     }
 
     .phone-box {
       display: flex;
-      height: 70px;
-      border: 1px solid #ccc;
-      border-radius: 16px;
+      flex-direction: row-reverse;
+      align-items: stretch;
+      height: 88px;
+      border: 1px solid #d1d5db;
+      border-radius: 20px;
       overflow: hidden;
+      background: #fff;
     }
 
-    input {
+    .phone-input {
       flex: 1;
       border: none;
       outline: none;
-      font-size: 18px;
-      padding: 0 12px;
+      font-size: 28px;
+      padding: 0 22px;
       text-align: right;
+      direction: ltr;
+      color: #111827;
+      background: transparent;
+    }
+
+    .phone-input::placeholder {
+      color: #9ca3af;
+      direction: rtl;
     }
 
     .country-btn {
-      width: 140px;
+      width: 170px;
       border: none;
-      border-left: 1px solid #ccc;
+      border-left: 1px solid #d1d5db;
       background: #fff;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 10px;
       cursor: pointer;
+      padding: 0 12px;
+    }
+
+    .country-btn:hover {
+      background: #f8fafc;
+    }
+
+    .country-code {
+      font-size: 28px;
+      direction: ltr;
+      unicode-bidi: plaintext;
+      min-width: 64px;
+      text-align: left;
+    }
+
+    .arrow {
+      font-size: 18px;
+      color: #111827;
     }
 
     .flag-img {
-      width: 26px;
-      height: 18px;
+      width: 28px;
+      height: 20px;
+      object-fit: cover;
       border-radius: 3px;
+      display: inline-block;
+      box-shadow: 0 0 0 1px rgba(0,0,0,0.08);
+      flex-shrink: 0;
     }
 
     .next-btn {
       width: 100%;
-      height: 65px;
-      border-radius: 16px;
+      height: 86px;
       border: none;
-      background: #aaa;
-      color: #333;
-      font-size: 22px;
+      border-radius: 20px;
+      font-size: 30px;
+      font-weight: 700;
+      background: #aaa49b;
+      color: #5f6368;
+      cursor: not-allowed;
+      transition: 0.2s;
+      margin-bottom: 14px;
     }
 
     .next-btn.active {
-      background: #111;
+      background: #101828;
       color: #fff;
+      cursor: pointer;
+    }
+
+    .terms {
+      text-align: center;
+      color: #4b5563;
+      line-height: 1.9;
+      font-size: 18px;
+      margin: 14px 0 22px;
+    }
+
+    .terms a {
+      color: #0b67b2;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .features .small-title {
+      color: #6b7280;
+      font-size: 22px;
+      margin: 0 0 4px;
+      text-align: right;
+    }
+
+    .features .main-title {
+      font-size: 38px;
+      font-weight: 700;
+      margin: 0 0 20px;
+      text-align: right;
+      line-height: 1.2;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 10px 0;
+      font-size: 24px;
+      line-height: 1.5;
+    }
+
+    .check {
+      width: 34px;
+      height: 34px;
+      border-radius: 999px;
+      border: 1px solid #d5ead7;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #16a34a;
+      background: #f0fdf4;
+      flex-shrink: 0;
+      font-size: 20px;
+      font-weight: 700;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.32);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+
+    .modal-overlay.show {
+      display: flex;
     }
 
     .modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(0,0,0,0.3);
-      display: none;
-      justify-content: center;
-      align-items: center;
+      width: 100%;
+      max-width: 430px;
+      background: #fff;
+      border-radius: 28px;
+      overflow: hidden;
+      max-height: 82vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .modal.show { display: flex; }
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 18px;
+      border-bottom: 1px solid #e5e7eb;
+    }
 
-    .modal-box {
+    .modal-title {
+      font-size: 22px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .icon-btn {
+      width: 36px;
+      height: 36px;
+      border: none;
+      background: none;
+      border-radius: 999px;
+      font-size: 24px;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .icon-btn:hover {
+      background: rgba(0,0,0,0.05);
+    }
+
+    .search-wrap {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .search-input {
       width: 100%;
-      max-width: 400px;
-      background: #fff;
-      border-radius: 20px;
-      overflow: hidden;
+      height: 48px;
+      border: 1px solid #d1d5db;
+      border-radius: 14px;
+      padding: 0 14px;
+      font-size: 17px;
+      outline: none;
+      text-align: right;
+      direction: rtl;
+    }
+
+    .country-list {
+      overflow-y: auto;
     }
 
     .country-item {
       width: 100%;
-      padding: 12px;
       border: none;
       background: #fff;
-      display: flex;
-      justify-content: space-between;
       cursor: pointer;
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 19px;
     }
 
-    .country-item:hover { background: #eee; }
+    .country-item:hover {
+      background: #f8fafc;
+    }
 
+    .country-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      direction: ltr;
+    }
+
+    .country-dial {
+      min-width: 62px;
+      text-align: left;
+      direction: ltr;
+      unicode-bidi: plaintext;
+    }
+
+    @media (min-width: 640px) {
+      .modal-overlay {
+        align-items: center;
+      }
+    }
   </style>
 </head>
-
 <body>
+  <div class="page">
+    <div class="topbar">
+      <button class="help-btn">المساعدة؟</button>
+      <button class="close-btn" type="button">✕</button>
+    </div>
 
-<div class="page">
+    <div class="hero">
+      <h1>تسجيل الدخول أو التسجيل</h1>
+      <p>الرجاء تعبئة رقم الموبايل</p>
+    </div>
 
-  <h2 style="text-align:center;">تسجيل الدخول أو التسجيل</h2>
+    <div class="card">
+      <label class="label">رقم الموبايل</label>
 
-  <div class="card">
-    <label>رقم الموبايل</label>
+      <div class="phone-box">
+        <input
+          id="phoneInput"
+          class="phone-input"
+          type="tel"
+          placeholder="أدخل رقم الموبايل"
+        />
 
-    <div class="phone-box">
-      <input id="phone" placeholder="أدخل رقم الموبايل" />
+        <button id="countryButton" class="country-btn" type="button">
+          <span class="arrow">▾</span>
+          <span id="countryCode" class="country-code">+964</span>
+          <img
+            id="countryFlag"
+            class="flag-img"
+            src="https://flagcdn.com/w40/iq.png"
+            alt="العراق"
+          />
+        </button>
+      </div>
+    </div>
 
-      <button class="country-btn" onclick="openModal()">
-        <span id="code">+964</span>
-        <img id="flag" class="flag-img" src="https://flagcdn.com/w40/iq.png" />
-      </button>
+    <button id="nextButton" class="next-btn" disabled>التالي</button>
+
+    <div class="terms">
+      باستخدامك السوق المفتوح أنت توافق على <br />
+      <a href="#">شروط الاستخدام</a>
+      <span> و </span>
+      <a href="#">سياسة الخصوصية</a>
+    </div>
+
+    <div class="card features">
+      <p class="small-title">أفضل طريقة</p>
+      <h2 class="main-title">لبيع أو شراء أي شيء</h2>
+
+      <div class="feature-item">
+        <span>انضم إلى ملايين الأشخاص على السوق المفتوح</span>
+        <span class="check">✓</span>
+      </div>
+
+      <div class="feature-item">
+        <span>تسجيل الدخول يعزز الثقة والأمان</span>
+        <span class="check">✓</span>
+      </div>
+
+      <div class="feature-item">
+        <span>أجب على الرسائل و العروض</span>
+        <span class="check">✓</span>
+      </div>
+
+      <div class="feature-item">
+        <span>إدارة الإعلانات المفضلة والمحفوظة</span>
+        <span class="check">✓</span>
+      </div>
+
+      <div class="feature-item">
+        <span>أضف أي شيء للبيع أو للإيجار او وظيفة</span>
+        <span class="check">✓</span>
+      </div>
     </div>
   </div>
 
-  <button id="next" class="next-btn">التالي</button>
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <button id="closeModalBtn" class="icon-btn" type="button">✕</button>
+        <h3 class="modal-title">اختر الدولة</h3>
+      </div>
 
-</div>
+      <div class="search-wrap">
+        <input
+          id="searchInput"
+          class="search-input"
+          type="text"
+          placeholder="ابحث عن الدولة أو المفتاح"
+        />
+      </div>
 
-<!-- modal -->
-<div id="modal" class="modal">
-  <div class="modal-box">
-    <input id="search" placeholder="بحث..." style="width:100%;padding:10px;border:none;border-bottom:1px solid #ccc;">
-    <div id="list"></div>
+      <div id="countryList" class="country-list"></div>
+    </div>
   </div>
-</div>
 
-<script>
+  <script>
+    const countries = [
+      { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "https://flagcdn.com/w40/iq.png" },
+      { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "https://flagcdn.com/w40/sa.png" },
+      { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "https://flagcdn.com/w40/kw.png" },
+      { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "https://flagcdn.com/w40/jo.png" },
+      { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "https://flagcdn.com/w40/eg.png" },
+      { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "https://flagcdn.com/w40/om.png" },
+      { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "https://flagcdn.com/w40/ly.png" },
+      { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "https://flagcdn.com/w40/ye.png" },
+      { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "https://flagcdn.com/w40/ps.png" },
+      { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "https://flagcdn.com/w40/ps.png" },
+      { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "https://flagcdn.com/w40/ae.png" },
+      { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "https://flagcdn.com/w40/qa.png" },
+      { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "https://flagcdn.com/w40/lb.png" },
+      { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "https://flagcdn.com/w40/mr.png" },
+      { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "https://flagcdn.com/w40/bh.png" },
+      { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "https://flagcdn.com/w40/dz.png" },
+      { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "https://flagcdn.com/w40/ma.png" },
+      { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "https://flagcdn.com/w40/tn.png" },
+      { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "https://flagcdn.com/w40/tr.png" },
+      { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "https://flagcdn.com/w40/sy.png" }
+    ];
 
-const countries = [
-{ name:"العراق", code:"+964", flag:"https://flagcdn.com/w40/iq.png"},
-{ name:"السعودية", code:"+966", flag:"https://flagcdn.com/w40/sa.png"},
-{ name:"الكويت", code:"+965", flag:"https://flagcdn.com/w40/kw.png"},
-{ name:"الأردن", code:"+962", flag:"https://flagcdn.com/w40/jo.png"},
-{ name:"مصر", code:"+20", flag:"https://flagcdn.com/w40/eg.png"},
-{ name:"عُمان", code:"+968", flag:"https://flagcdn.com/w40/om.png"},
-{ name:"ليبيا", code:"+218", flag:"https://flagcdn.com/w40/ly.png"},
-{ name:"اليمن", code:"+967", flag:"https://flagcdn.com/w40/ye.png"},
-{ name:"فلسطين", code:"+970", flag:"https://flagcdn.com/w40/ps.png"},
-{ name:"فلسطين", code:"+972", flag:"https://flagcdn.com/w40/ps.png"},
-{ name:"الإمارات", code:"+971", flag:"https://flagcdn.com/w40/ae.png"},
-{ name:"قطر", code:"+974", flag:"https://flagcdn.com/w40/qa.png"},
-{ name:"لبنان", code:"+961", flag:"https://flagcdn.com/w40/lb.png"},
-{ name:"موريتانيا", code:"+222", flag:"https://flagcdn.com/w40/mr.png"},
-{ name:"البحرين", code:"+973", flag:"https://flagcdn.com/w40/bh.png"},
-{ name:"الجزائر", code:"+213", flag:"https://flagcdn.com/w40/dz.png"},
-{ name:"المغرب", code:"+212", flag:"https://flagcdn.com/w40/ma.png"},
-{ name:"تونس", code:"+216", flag:"https://flagcdn.com/w40/tn.png"},
-{ name:"تركيا", code:"+90", flag:"https://flagcdn.com/w40/tr.png"},
-{ name:"سوريا", code:"+963", flag:"https://flagcdn.com/w40/sy.png"}
-];
+    let selectedCountry = countries[0];
 
-let selected = countries[0];
+    const phoneInput = document.getElementById("phoneInput");
+    const nextButton = document.getElementById("nextButton");
+    const countryButton = document.getElementById("countryButton");
+    const countryCode = document.getElementById("countryCode");
+    const countryFlag = document.getElementById("countryFlag");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const searchInput = document.getElementById("searchInput");
+    const countryList = document.getElementById("countryList");
 
-const list = document.getElementById("list");
-const modal = document.getElementById("modal");
+    function updateSelectedCountry(country) {
+      selectedCountry = country;
+      countryCode.textContent = country.dialCode;
+      countryFlag.src = country.flag;
+      countryFlag.alt = country.nameAr;
+    }
 
-function render(data){
-  list.innerHTML="";
-  data.forEach(c=>{
-    const btn=document.createElement("button");
-    btn.className="country-item";
-    btn.innerHTML=`
-      <span>${c.name}</span>
-      <span>
-        ${c.code}
-        <img class="flag-img" src="${c.flag}">
-      </span>
-    `;
-    btn.onclick=()=>{
-      selected=c;
-      document.getElementById("code").innerText=c.code;
-      document.getElementById("flag").src=c.flag;
-      modal.classList.remove("show");
-    };
-    list.appendChild(btn);
-  });
-}
+    function renderCountries(list) {
+      countryList.innerHTML = "";
 
-function openModal(){
-  modal.classList.add("show");
-}
+      list.forEach((country) => {
+        const button = document.createElement("button");
+        button.className = "country-item";
+        button.type = "button";
+        button.innerHTML = `
+          <span>${country.nameAr}</span>
+          <span class="country-meta">
+            <span class="country-dial">${country.dialCode}</span>
+            <img class="flag-img" src="${country.flag}" alt="${country.nameAr}">
+          </span>
+        `;
 
-modal.onclick=(e)=>{
-  if(e.target===modal) modal.classList.remove("show");
-};
+        button.addEventListener("click", () => {
+          updateSelectedCountry(country);
+          modalOverlay.classList.remove("show");
+          searchInput.value = "";
+          renderCountries(countries);
+        });
 
-document.getElementById("search").oninput=(e)=>{
-  const val=e.target.value;
-  render(countries.filter(c=>c.name.includes(val)||c.code.includes(val)));
-};
+        countryList.appendChild(button);
+      });
+    }
 
-document.getElementById("phone").oninput=(e)=>{
-  let v=e.target.value.replace(/\D/g,"");
-  e.target.value=v;
+    function validatePhone() {
+      const cleaned = phoneInput.value.replace(/\D/g, "");
+      phoneInput.value = cleaned;
 
-  const btn=document.getElementById("next");
-  if(v.length>=7){
-    btn.classList.add("active");
-  }else{
-    btn.classList.remove("active");
-  }
-};
+      if (cleaned.length >= 7) {
+        nextButton.disabled = false;
+        nextButton.classList.add("active");
+      } else {
+        nextButton.disabled = true;
+        nextButton.classList.remove("active");
+      }
+    }
 
-render(countries);
+    phoneInput.addEventListener("input", validatePhone);
 
-</script>
+    countryButton.addEventListener("click", () => {
+      modalOverlay.classList.add("show");
+      searchInput.focus();
+    });
 
+    closeModalBtn.addEventListener("click", () => {
+      modalOverlay.classList.remove("show");
+    });
+
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove("show");
+      }
+    });
+
+    searchInput.addEventListener("input", () => {
+      const value = searchInput.value.trim().toLowerCase();
+
+      const filtered = countries.filter((country) => {
+        return (
+          country.nameAr.includes(searchInput.value) ||
+          country.dialCode.includes(value) ||
+          country.iso2.toLowerCase().includes(value)
+        );
+      });
+
+      renderCountries(filtered);
+    });
+
+    updateSelectedCountry(countries[0]);
+    renderCountries(countries);
+  </script>
 </body>
 </html>
