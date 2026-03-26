@@ -1,180 +1,502 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { ChevronDown, X } from "lucide-react";
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل الدخول أو التسجيل</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
 
-const countries = [
-  { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "🇮🇶" },
-  { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "🇸🇦" },
-  { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "🇰🇼" },
-  { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "🇯🇴" },
-  { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "🇪🇬" },
-  { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "🇴🇲" },
-  { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "🇱🇾" },
-  { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "🇾🇪" },
-  { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "🇵🇸" },
-  { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "🇵🇸" },
-  { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "🇦🇪" },
-  { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "🇶🇦" },
-  { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "🇱🇧" },
-  { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "🇲🇷" },
-  { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "🇧🇭" },
-  { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "🇩🇿" },
-  { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "🇲🇦" },
-  { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "🇹🇳" },
-  { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "🇹🇷" },
-  { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "🇸🇾" },
-];
+    body {
+      margin: 0;
+      background: #f3f3f7;
+      display: flex;
+      justify-content: center;
+      padding: 16px;
+      color: #111;
+    }
 
-const fallbackCountry = countries.find((c) => c.iso2 === "IQ")!;
+    .page {
+      width: 100%;
+      max-width: 430px;
+    }
 
-export default function PhoneLoginPage() {
-  const [selectedCountry, setSelectedCountry] = useState(fallbackCountry);
-  const [phone, setPhone] = useState("");
-  const [isOpen, setIsOpen] = useState(false);
-  const [search, setSearch] = useState("");
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
 
-  useEffect(() => {
-    setSelectedCountry(fallbackCountry);
-  }, []);
+    .help {
+      color: #4b5563;
+      font-size: 16px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
 
-  const filteredCountries = useMemo(() => {
-    const q = search.trim().toLowerCase();
-    if (!q) return countries;
-    return countries.filter(
-      (country) =>
-        country.nameAr.includes(search) ||
-        country.dialCode.includes(q) ||
-        country.iso2.toLowerCase().includes(q)
-    );
-  }, [search]);
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 28px;
+      cursor: pointer;
+      line-height: 1;
+    }
 
-  const isValid = phone.trim().length >= 7;
+    .hero {
+      text-align: center;
+      margin-bottom: 22px;
+    }
 
-  return (
-    <div className="min-h-screen bg-[#f3f3f7] flex items-center justify-center p-4" dir="rtl">
-      <div className="w-full max-w-md bg-transparent">
-        <div className="mb-4 flex items-center justify-between">
-          <button className="text-slate-500 hover:text-slate-700 transition">کمک؟</button>
-          <button className="rounded-full p-2 hover:bg-black/5 transition" aria-label="بستن">
-            <X className="h-7 w-7" />
-          </button>
-        </div>
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: 28px;
+      font-weight: 700;
+    }
 
-        <div className="text-center mb-6">
-          <h1 className="text-4xl font-bold tracking-tight mb-3">تسجيل الدخول أو التسجيل</h1>
-          <p className="text-xl text-slate-600">الرجاء تعبئة رقم الموبايل</p>
-        </div>
+    .hero p {
+      margin: 0;
+      font-size: 18px;
+      color: #555;
+    }
 
-        <div className="bg-white rounded-[28px] shadow-sm p-5 border border-slate-100 mb-5">
-          <label className="block text-2xl font-semibold text-right mb-4">رقم الموبايل</label>
+    .card {
+      background: #fff;
+      border-radius: 24px;
+      padding: 18px;
+      border: 1px solid #ececf1;
+      margin-bottom: 18px;
+    }
 
-          <div className="flex rounded-2xl border border-slate-300 overflow-hidden bg-white h-24">
-            <input
-              value={phone}
-              onChange={(e) => setPhone(e.target.value.replace(/[^\d]/g, ""))}
-              placeholder="أدخل رقم الموبايل"
-              className="flex-1 px-6 text-2xl outline-none text-right placeholder:text-slate-400"
-              inputMode="tel"
-            />
+    .label {
+      display: block;
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      text-align: right;
+    }
 
-            <button
-              type="button"
-              onClick={() => setIsOpen(true)}
-              className="w-52 border-r border-slate-300 flex items-center justify-center gap-3 text-2xl hover:bg-slate-50 transition"
-            >
-              <ChevronDown className="h-6 w-6" />
-              <span>{selectedCountry.dialCode}</span>
-              <span className="text-4xl leading-none">{selectedCountry.flag}</span>
-            </button>
-          </div>
-        </div>
+    .phone-box {
+      display: flex;
+      flex-direction: row-reverse;
+      height: 72px;
+      border: 1px solid #d1d5db;
+      border-radius: 18px;
+      overflow: hidden;
+      background: #fff;
+    }
 
-        <button
-          disabled={!isValid}
-          className={`w-full h-24 rounded-2xl text-3xl font-bold transition ${
-            isValid
-              ? "bg-slate-900 text-white hover:opacity-95"
-              : "bg-[#a6a39d] text-slate-700 cursor-not-allowed"
-          }`}
-        >
-          التالي
+    .phone-input {
+      flex: 1;
+      border: none;
+      outline: none;
+      font-size: 18px;
+      padding: 0 18px;
+      text-align: right;
+      direction: rtl;
+      color: #333;
+    }
+
+    .phone-input::placeholder {
+      color: #9ca3af;
+    }
+
+    .country-btn {
+      width: 145px;
+      border: none;
+      border-left: 1px solid #d1d5db;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      cursor: pointer;
+      font-size: 18px;
+    }
+
+    .country-btn:hover {
+      background: #f8fafc;
+    }
+
+    .next-btn {
+      width: 100%;
+      height: 74px;
+      border: none;
+      border-radius: 18px;
+      font-size: 26px;
+      font-weight: 700;
+      background: #a6a39d;
+      color: #4b5563;
+      cursor: not-allowed;
+    }
+
+    .next-btn.active {
+      background: #111827;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .terms {
+      text-align: center;
+      color: #444;
+      line-height: 1.9;
+      font-size: 16px;
+      margin: 18px 0 24px;
+    }
+
+    .terms a {
+      color: #0f5ea8;
+      text-decoration: none;
+      font-weight: 700;
+    }
+
+    .features .small-title {
+      color: #555;
+      font-size: 17px;
+      margin: 0 0 8px;
+      text-align: right;
+    }
+
+    .features .main-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 0 0 18px;
+      text-align: right;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 9px 0;
+      font-size: 18px;
+    }
+
+    .check {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      border: 1px solid #d7e9d9;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #16a34a;
+      background: #f0fdf4;
+      flex-shrink: 0;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.3);
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 16px;
+      z-index: 999;
+    }
+
+    .modal-overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      width: 100%;
+      max-width: 430px;
+      background: #fff;
+      border-radius: 24px;
+      overflow: hidden;
+      max-height: 80vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .modal-title {
+      font-size: 20px;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    .icon-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .search-wrap {
+      padding: 14px 16px;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .search-input {
+      width: 100%;
+      height: 46px;
+      border: 1px solid #d1d5db;
+      border-radius: 12px;
+      padding: 0 14px;
+      font-size: 16px;
+      outline: none;
+      text-align: right;
+    }
+
+    .country-list {
+      overflow-y: auto;
+    }
+
+    .country-item {
+      width: 100%;
+      border: none;
+      background: #fff;
+      cursor: pointer;
+      padding: 14px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 17px;
+    }
+
+    .country-item:hover {
+      background: #f8fafc;
+    }
+
+    .country-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .arrow {
+      font-size: 18px;
+    }
+
+    .flag {
+      font-size: 24px;
+      line-height: 1;
+    }
+
+    @media (min-width: 640px) {
+      .modal-overlay {
+        align-items: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="topbar">
+      <button class="help">المساعدة؟</button>
+      <button class="close-btn">✕</button>
+    </div>
+
+    <div class="hero">
+      <h1>تسجيل الدخول أو التسجيل</h1>
+      <p>الرجاء تعبئة رقم الموبايل</p>
+    </div>
+
+    <div class="card">
+      <label class="label">رقم الموبايل</label>
+
+      <div class="phone-box">
+        <input
+          id="phoneInput"
+          class="phone-input"
+          type="tel"
+          placeholder="أدخل رقم الموبايل"
+        />
+
+        <button id="countryButton" class="country-btn" type="button">
+          <span id="countryArrow" class="arrow">▾</span>
+          <span id="countryCode">+964</span>
+          <span id="countryFlag" class="flag">🇮🇶</span>
         </button>
-
-        <p className="text-center text-slate-700 text-lg leading-8 mt-6">
-          باستخدامك السوق المفتوح أنت توافق على <br />
-          <a href="#" className="text-sky-700 font-semibold">شروط الاستخدام</a>
-          <span> و </span>
-          <a href="#" className="text-sky-700 font-semibold">سياسة الخصوصية</a>
-        </p>
-
-        <div className="mt-8 bg-white rounded-[28px] shadow-sm p-6 border border-slate-100">
-          <p className="text-xl text-right text-slate-700">أفضل طريقة</p>
-          <h2 className="text-4xl font-bold text-right mt-1 mb-6">لبيع أو شراء أي شيء</h2>
-
-          <ul className="space-y-4 text-right">
-            {[
-              "انضم إلى ملايين الأشخاص على السوق المفتوح",
-              "تسجيل الدخول يعزز الثقة والأمان",
-              "أجب على الرسائل و العروض",
-              "إدارة الإعلانات المفضلة والمحفوظة",
-              "أضف أي شيء للبيع أو للإيجار او وظيفة",
-            ].map((item) => (
-              <li key={item} className="flex items-center justify-between gap-3 text-2xl">
-                <span>{item}</span>
-                <span className="h-10 w-10 rounded-full border border-slate-200 flex items-center justify-center text-green-600 bg-green-50">
-                  ✓
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        {isOpen && (
-          <div className="fixed inset-0 bg-black/30 z-50 flex items-end sm:items-center justify-center p-4">
-            <div className="w-full max-w-md bg-white rounded-[28px] shadow-2xl overflow-hidden">
-              <div className="p-4 border-b border-slate-200 flex items-center justify-between">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="rounded-full p-2 hover:bg-black/5"
-                >
-                  <X className="h-5 w-5" />
-                </button>
-                <h3 className="text-xl font-bold">اختر الدولة</h3>
-              </div>
-
-              <div className="p-4 border-b border-slate-200">
-                <input
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  placeholder="ابحث عن الدولة أو المفتاح"
-                  className="w-full h-12 rounded-xl border border-slate-300 px-4 outline-none"
-                />
-              </div>
-
-              <div className="max-h-96 overflow-y-auto">
-                {filteredCountries.map((country) => (
-                  <button
-                    key={country.iso2}
-                    onClick={() => {
-                      setSelectedCountry(country);
-                      setIsOpen(false);
-                      setSearch("");
-                    }}
-                    className="w-full px-4 py-3 border-b border-slate-100 flex items-center justify-between hover:bg-slate-50"
-                  >
-                    <div className="text-right">
-                      <div className="font-semibold">{country.nameAr}</div>
-                    </div>
-                    <div className="flex items-center gap-3 text-lg">
-                      <span>{country.dialCode}</span>
-                      <span className="text-2xl">{country.flag}</span>
-                    </div>
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </div>
-  );
-}
+
+    <button id="nextButton" class="next-btn" disabled>التالي</button>
+
+    <div class="terms">
+      باستخدامك السوق المفتوح أنت توافق على <br />
+      <a href="#">شروط الاستخدام</a>
+      و
+      <a href="#">سياسة الخصوصية</a>
+    </div>
+
+    <div class="card features">
+      <p class="small-title">أفضل طريقة</p>
+      <h2 class="main-title">لبيع أو شراء أي شيء</h2>
+
+      <div class="feature-item">
+        <span>انضم إلى ملايين الأشخاص على السوق المفتوح</span>
+        <span class="check">✓</span>
+      </div>
+      <div class="feature-item">
+        <span>تسجيل الدخول يعزز الثقة والأمان</span>
+        <span class="check">✓</span>
+      </div>
+      <div class="feature-item">
+        <span>أجب على الرسائل و العروض</span>
+        <span class="check">✓</span>
+      </div>
+      <div class="feature-item">
+        <span>إدارة الإعلانات المفضلة والمحفوظة</span>
+        <span class="check">✓</span>
+      </div>
+      <div class="feature-item">
+        <span>أضف أي شيء للبيع أو للإيجار او وظيفة</span>
+        <span class="check">✓</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="modalOverlay" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <button id="closeModalBtn" class="icon-btn" type="button">✕</button>
+        <h3 class="modal-title">اختر الدولة</h3>
+      </div>
+
+      <div class="search-wrap">
+        <input
+          id="searchInput"
+          class="search-input"
+          type="text"
+          placeholder="ابحث عن الدولة أو المفتاح"
+        />
+      </div>
+
+      <div id="countryList" class="country-list"></div>
+    </div>
+  </div>
+
+  <script>
+    const countries = [
+      { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "🇮🇶" },
+      { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "🇸🇦" },
+      { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "🇰🇼" },
+      { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "🇯🇴" },
+      { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "🇪🇬" },
+      { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "🇴🇲" },
+      { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "🇱🇾" },
+      { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "🇾🇪" },
+      { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "🇵🇸" },
+      { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "🇵🇸" },
+      { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "🇦🇪" },
+      { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "🇶🇦" },
+      { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "🇱🇧" },
+      { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "🇲🇷" },
+      { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "🇧🇭" },
+      { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "🇩🇿" },
+      { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "🇲🇦" },
+      { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "🇹🇳" },
+      { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "🇹🇷" },
+      { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "🇸🇾" }
+    ];
+
+    let selectedCountry = countries[0];
+
+    const phoneInput = document.getElementById("phoneInput");
+    const nextButton = document.getElementById("nextButton");
+    const countryButton = document.getElementById("countryButton");
+    const countryCode = document.getElementById("countryCode");
+    const countryFlag = document.getElementById("countryFlag");
+    const modalOverlay = document.getElementById("modalOverlay");
+    const closeModalBtn = document.getElementById("closeModalBtn");
+    const searchInput = document.getElementById("searchInput");
+    const countryList = document.getElementById("countryList");
+
+    function updateSelectedCountry(country) {
+      selectedCountry = country;
+      countryCode.textContent = country.dialCode;
+      countryFlag.textContent = country.flag;
+    }
+
+    function renderCountries(list) {
+      countryList.innerHTML = "";
+
+      list.forEach((country) => {
+        const button = document.createElement("button");
+        button.className = "country-item";
+        button.type = "button";
+        button.innerHTML = `
+          <span>${country.nameAr}</span>
+          <span class="country-meta">
+            <span>${country.dialCode}</span>
+            <span class="flag">${country.flag}</span>
+          </span>
+        `;
+
+        button.addEventListener("click", () => {
+          updateSelectedCountry(country);
+          modalOverlay.classList.remove("show");
+          searchInput.value = "";
+          renderCountries(countries);
+        });
+
+        countryList.appendChild(button);
+      });
+    }
+
+    function validatePhone() {
+      const cleaned = phoneInput.value.replace(/\D/g, "");
+      phoneInput.value = cleaned;
+
+      if (cleaned.length >= 7) {
+        nextButton.disabled = false;
+        nextButton.classList.add("active");
+      } else {
+        nextButton.disabled = true;
+        nextButton.classList.remove("active");
+      }
+    }
+
+    phoneInput.addEventListener("input", validatePhone);
+
+    countryButton.addEventListener("click", () => {
+      modalOverlay.classList.add("show");
+      searchInput.focus();
+    });
+
+    closeModalBtn.addEventListener("click", () => {
+      modalOverlay.classList.remove("show");
+    });
+
+    modalOverlay.addEventListener("click", (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove("show");
+      }
+    });
+
+    searchInput.addEventListener("input", () => {
+      const value = searchInput.value.trim().toLowerCase();
+
+      const filtered = countries.filter((country) => {
+        return (
+          country.nameAr.includes(searchInput.value) ||
+          country.dialCode.includes(value) ||
+          country.iso2.toLowerCase().includes(value)
+        );
+      });
+
+      renderCountries(filtered);
+    });
+
+    updateSelectedCountry(countries[0]);
+    renderCountries(countries);
+  </script>
+</body>
+</html>
