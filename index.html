@@ -2,29 +2,29 @@ import React, { useEffect, useMemo, useState } from "react";
 import { ChevronDown, X } from "lucide-react";
 
 const countries = [
-  { name: "Turkey", nameFa: "ترکیه", iso2: "TR", dialCode: "+90", flag: "🇹🇷" },
-  { name: "Iran", nameFa: "ایران", iso2: "IR", dialCode: "+98", flag: "🇮🇷" },
-  { name: "Saudi Arabia", nameFa: "عربستان سعودی", iso2: "SA", dialCode: "+966", flag: "🇸🇦" },
-  { name: "United Arab Emirates", nameFa: "امارات", iso2: "AE", dialCode: "+971", flag: "🇦🇪" },
-  { name: "Iraq", nameFa: "عراق", iso2: "IQ", dialCode: "+964", flag: "🇮🇶" },
-  { name: "Kuwait", nameFa: "کویت", iso2: "KW", dialCode: "+965", flag: "🇰🇼" },
-  { name: "Qatar", nameFa: "قطر", iso2: "QA", dialCode: "+974", flag: "🇶🇦" },
-  { name: "Bahrain", nameFa: "بحرین", iso2: "BH", dialCode: "+973", flag: "🇧🇭" },
-  { name: "Oman", nameFa: "عمان", iso2: "OM", dialCode: "+968", flag: "🇴🇲" },
-  { name: "Jordan", nameFa: "اردن", iso2: "JO", dialCode: "+962", flag: "🇯🇴" },
-  { name: "Egypt", nameFa: "مصر", iso2: "EG", dialCode: "+20", flag: "🇪🇬" },
-  { name: "Germany", nameFa: "آلمان", iso2: "DE", dialCode: "+49", flag: "🇩🇪" },
-  { name: "France", nameFa: "فرانسه", iso2: "FR", dialCode: "+33", flag: "🇫🇷" },
-  { name: "United Kingdom", nameFa: "بریتانیا", iso2: "GB", dialCode: "+44", flag: "🇬🇧" },
-  { name: "United States", nameFa: "آمریکا", iso2: "US", dialCode: "+1", flag: "🇺🇸" },
-  { name: "Canada", nameFa: "کانادا", iso2: "CA", dialCode: "+1", flag: "🇨🇦" },
-  { name: "Australia", nameFa: "استرالیا", iso2: "AU", dialCode: "+61", flag: "🇦🇺" },
-  { name: "India", nameFa: "هند", iso2: "IN", dialCode: "+91", flag: "🇮🇳" },
-  { name: "Pakistan", nameFa: "پاکستان", iso2: "PK", dialCode: "+92", flag: "🇵🇰" },
-  { name: "Afghanistan", nameFa: "افغانستان", iso2: "AF", dialCode: "+93", flag: "🇦🇫" },
+  { nameAr: "العراق", iso2: "IQ", dialCode: "+964", flag: "🇮🇶" },
+  { nameAr: "السعودية", iso2: "SA", dialCode: "+966", flag: "🇸🇦" },
+  { nameAr: "الكويت", iso2: "KW", dialCode: "+965", flag: "🇰🇼" },
+  { nameAr: "الأردن", iso2: "JO", dialCode: "+962", flag: "🇯🇴" },
+  { nameAr: "مصر", iso2: "EG", dialCode: "+20", flag: "🇪🇬" },
+  { nameAr: "عُمان", iso2: "OM", dialCode: "+968", flag: "🇴🇲" },
+  { nameAr: "ليبيا", iso2: "LY", dialCode: "+218", flag: "🇱🇾" },
+  { nameAr: "اليمن", iso2: "YE", dialCode: "+967", flag: "🇾🇪" },
+  { nameAr: "فلسطين", iso2: "PS", dialCode: "+970", flag: "🇵🇸" },
+  { nameAr: "فلسطين", iso2: "PS-972", dialCode: "+972", flag: "🇵🇸" },
+  { nameAr: "الإمارات", iso2: "AE", dialCode: "+971", flag: "🇦🇪" },
+  { nameAr: "قطر", iso2: "QA", dialCode: "+974", flag: "🇶🇦" },
+  { nameAr: "لبنان", iso2: "LB", dialCode: "+961", flag: "🇱🇧" },
+  { nameAr: "موريتانيا", iso2: "MR", dialCode: "+222", flag: "🇲🇷" },
+  { nameAr: "البحرين", iso2: "BH", dialCode: "+973", flag: "🇧🇭" },
+  { nameAr: "الجزائر", iso2: "DZ", dialCode: "+213", flag: "🇩🇿" },
+  { nameAr: "المغرب", iso2: "MA", dialCode: "+212", flag: "🇲🇦" },
+  { nameAr: "تونس", iso2: "TN", dialCode: "+216", flag: "🇹🇳" },
+  { nameAr: "تركيا", iso2: "TR", dialCode: "+90", flag: "🇹🇷" },
+  { nameAr: "سوريا", iso2: "SY", dialCode: "+963", flag: "🇸🇾" },
 ];
 
-const fallbackCountry = countries.find((c) => c.iso2 === "TR")!;
+const fallbackCountry = countries.find((c) => c.iso2 === "IQ")!;
 
 export default function PhoneLoginPage() {
   const [selectedCountry, setSelectedCountry] = useState(fallbackCountry);
@@ -33,71 +33,7 @@ export default function PhoneLoginPage() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    const detectCountry = async () => {
-      try {
-        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-        const timezoneMap: Record<string, string> = {
-          "Europe/Istanbul": "TR",
-          "Asia/Tehran": "IR",
-          "Asia/Riyadh": "SA",
-          "Asia/Dubai": "AE",
-          "Asia/Baghdad": "IQ",
-          "Asia/Kuwait": "KW",
-          "Asia/Qatar": "QA",
-          "Asia/Bahrain": "BH",
-          "Asia/Muscat": "OM",
-          "Asia/Amman": "JO",
-          "Africa/Cairo": "EG",
-          "Europe/Berlin": "DE",
-          "Europe/Paris": "FR",
-          "Europe/London": "GB",
-          "America/New_York": "US",
-          "America/Chicago": "US",
-          "America/Denver": "US",
-          "America/Los_Angeles": "US",
-          "America/Toronto": "CA",
-          "Australia/Sydney": "AU",
-          "Asia/Kolkata": "IN",
-          "Asia/Karachi": "PK",
-          "Asia/Kabul": "AF",
-        };
-
-        const fromTimezone = countries.find(
-          (c) => c.iso2 === timezoneMap[timezone]
-        );
-        if (fromTimezone) {
-          setSelectedCountry(fromTimezone);
-          return;
-        }
-
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            async (position) => {
-              try {
-                const { latitude, longitude } = position.coords;
-                const response = await fetch(
-                  `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${latitude}&lon=${longitude}`
-                );
-                const data = await response.json();
-                const iso2 = data?.address?.country_code?.toUpperCase();
-                const found = countries.find((c) => c.iso2 === iso2);
-                if (found) setSelectedCountry(found);
-              } catch (error) {
-                console.error("Reverse geocoding failed", error);
-              }
-            },
-            () => {
-              // ignore
-            }
-          );
-        }
-      } catch (error) {
-        console.error("Country detection failed", error);
-      }
-    };
-
-    detectCountry();
+    setSelectedCountry(fallbackCountry);
   }, []);
 
   const filteredCountries = useMemo(() => {
@@ -105,8 +41,7 @@ export default function PhoneLoginPage() {
     if (!q) return countries;
     return countries.filter(
       (country) =>
-        country.name.toLowerCase().includes(q) ||
-        country.nameFa.includes(search) ||
+        country.nameAr.includes(search) ||
         country.dialCode.includes(q) ||
         country.iso2.toLowerCase().includes(q)
     );
@@ -203,14 +138,14 @@ export default function PhoneLoginPage() {
                 >
                   <X className="h-5 w-5" />
                 </button>
-                <h3 className="text-xl font-bold">انتخاب کشور</h3>
+                <h3 className="text-xl font-bold">اختر الدولة</h3>
               </div>
 
               <div className="p-4 border-b border-slate-200">
                 <input
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
-                  placeholder="جستجوی کشور یا کد"
+                  placeholder="ابحث عن الدولة أو المفتاح"
                   className="w-full h-12 rounded-xl border border-slate-300 px-4 outline-none"
                 />
               </div>
@@ -227,8 +162,7 @@ export default function PhoneLoginPage() {
                     className="w-full px-4 py-3 border-b border-slate-100 flex items-center justify-between hover:bg-slate-50"
                   >
                     <div className="text-right">
-                      <div className="font-semibold">{country.nameFa}</div>
-                      <div className="text-sm text-slate-500">{country.name}</div>
+                      <div className="font-semibold">{country.nameAr}</div>
                     </div>
                     <div className="flex items-center gap-3 text-lg">
                       <span>{country.dialCode}</span>
